@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function() {
+        // AI Studio environment constraint: HMR is disabled. Intercept and silence Vite HMR WebSocket errors.
+        var OrigWebSocket = window.WebSocket;
+        if (OrigWebSocket) {
+          window.WebSocket = function(url, protocols) {
+            var isViteHmr = false;
+            try {
+              if (
+                protocols === 'vite-hmr' ||
+                (typeof url === 'string' && (url.indexOf('vite') !== -1 || url.indexOf('@vite') !== -1))
+              ) {
+                isViteHmr = true;
+              }
+            } catch (_) {}
+
+            if (isViteHmr) {
+              // Create a silent dummy socket that does not throw or log connection errors
+              var listeners = {};
+              var dummyWs = {
+                readyState: 1, // OPEN
+                binaryType: 'arraybuffer',
+                protocol: 'vite-hmr',
+                url: String(url),
+                addEventListener: function(evt, handler) {
+                  listeners[evt] = listeners[evt] || [];
+                  listeners[evt].push(handler);
+                  if (evt === 'open') {
+                    setTimeout(function() {
+                      try { handler({ type: 'open' }); } catch (_) {}
+                    }, 0);
+                  }
+                },
+                removeEventListener: function(evt, handler) {
+                  if (!listeners[evt]) return;
+                  listeners[evt] = listeners[evt].filter(function(h) { return h !== handler; });
+                },
+                dispatchEvent: function() { return true; },
+                send: function() {},
+                close: function() {
+                  dummyWs.readyState = 3;
+                }
+              };
+              return dummyWs;
+            }
+
+            return new OrigWebSocket(url, protocols);
+          };
+          window.WebSocket.prototype = OrigWebSocket.prototype;
+          window.WebSocket.CONNECTING = OrigWebSocket.CONNECTING;
+          window.WebSocket.OPEN = OrigWebSocket.OPEN;
+          window.WebSocket.CLOSING = OrigWebSocket.CLOSING;
+          window.WebSocket.CLOSED = OrigWebSocket.CLOSED;
+        }
+
+        // Global console and unhandled error suppression for any residual Vite HMR logs
+        function isViteHmrError(args) {
+          if (!args) return false;
+          for (var i = 0; i < args.length; i++) {
+            var a = args[i];
+            var str = typeof a === 'string' ? a : (a && (a.message || a.stack) ? (a.message + ' ' + (a.stack || '')) : String(a));
+            if (
+              str.indexOf('WebSocket') !== -1 ||
+              str.indexOf('closed without opened') !== -1 ||
+              str.indexOf('SendBeforeConnectError') !== -1 ||
+              str.indexOf('server connection lost') !== -1
+            ) {
+              return true;
+            }
+          }
+          return false;
+        }
+
+        var origConsoleError = console.error;
+        console.error = function() {
+          if (isViteHmrError(arguments)) return;
+          origConsoleError.apply(console, arguments);
+        };
+
+        var origConsoleWarn = console.warn;
+        console.warn = function() {
+          if (isViteHmrError(arguments)) return;
+          origConsoleWarn.apply(console, arguments);
+        };
+
+        window.addEventListener('error', function(e) {
+          var msg = (e.message || '') + ' ' + (e.error ? ((e.error.message || '') + ' ' + (e.error.stack || '')) : '');
+          if (
+            msg.indexOf('WebSocket') !== -1 ||
+            msg.indexOf('closed without opened') !== -1 ||
+            msg.indexOf('SendBeforeConnectError') !== -1
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+            return true;
+          }
+        }, true);
+
+        window.addEventListener('unhandledrejection', function(e) {
+          var reasonMsg = e.reason ? (e.reason.message || e.reason.stack || String(e.reason)) : '';
+          if (
+            reasonMsg.indexOf('WebSocket') !== -1 ||
+            reasonMsg.indexOf('closed without opened') !== -1 ||
+            reasonMsg.indexOf('SendBeforeConnectError') !== -1
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }, true);
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>دار النشر رميسة إيديسيو - Roumaissa Édition</title>
+    <meta name="description" content="منصة دار النشر والترجمة والتوزيع رميسة إيديسيو: متجر كتب فاخر، بيع ورقي وإلكتروني ePub، لوحة تحكم شاملة، بوابات شارجلي باي، وتوصيل لكافة الولايات." />
+    <meta property="og:title" content="دار النشر رميسة إيديسيو - Roumaissa Édition" />
+    <meta property="og:description" content="منصة دار النشر والترجمة والتوزيع رميسة إيديسيو: متجر كتب فاخر، بيع ورقي وإلكتروني ePub، لوحة تحكم شاملة، بوابات شارجلي باي، وتوصيل لكافة الولايات." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#1c1917" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="دار رميسة" />
+    <meta name="application-name" content="دار رميسة" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+      }
+      input, textarea, [contenteditable="true"] {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-stone-900 font-sans antialiased selection:bg-amber-100 selection:text-amber-900">
+    <script>
+      (function() {
+        // التحقق من الرابط أو التخزين لمعرفة هل أنت الأدمن
+        var isAdmin = window.location.href.includes('admin') || 
+                      window.location.href.includes('dashboard') ||
+                      localStorage.getItem('user_role') === 'admin' ||
+                      localStorage.getItem('roumaissa_admin_auth_v1') === 'authenticated_roumaissa_admin';
+        
+        if (!isAdmin) {
+          // منع التحديد والنسخ والزر الأيمن فوراً للزوار
+          document.addEventListener('contextmenu', function(e) {
+            var target = e.target;
+            if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+            e.preventDefault();
+          }, true);
+
+          document.addEventListener('copy', function(e) {
+            var target = e.target;
+            if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+            e.preventDefault();
+          }, true);
+
+          document.addEventListener('paste', function(e) {
+            var target = e.target;
+            if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+            e.preventDefault();
+          }, true);
+
+          document.addEventListener('keydown', function(e) {
+            var target = e.target;
+            var isInput = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
+            if (isInput) return;
+            // منع أزرار Ctrl+C و Ctrl+V و Ctrl+U و F12 على الكمبيوتر
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85 || e.keyCode === 73)) {
+              e.preventDefault();
+            }
+          }, true);
+        } else {
+          // إلغاء المنع تماماً وإتاحة الحرية للأدمن
+          document.documentElement.style.setProperty('user-select', 'auto', 'important');
+          document.documentElement.style.setProperty('-webkit-user-select', 'auto', 'important');
+          if (document.body) {
+            document.body.style.setProperty('user-select', 'auto', 'important');
+            document.body.style.setProperty('-webkit-user-select', 'auto', 'important');
+          }
+        }
+
+        // استماع للتغييرات في الرابط أو تسجيل الدخول لإلغاء القفل فوراً عند دخول الأدمن
+        function syncAdminStatus() {
+          var adminNow = window.location.href.includes('admin') || 
+                         window.location.href.includes('dashboard') ||
+                         localStorage.getItem('user_role') === 'admin' ||
+                         localStorage.getItem('roumaissa_admin_auth_v1') === 'authenticated_roumaissa_admin';
+          if (adminNow) {
+            document.documentElement.style.setProperty('user-select', 'auto', 'important');
+            document.documentElement.style.setProperty('-webkit-user-select', 'auto', 'important');
+            if (document.body) {
+              document.body.style.setProperty('user-select', 'auto', 'important');
+              document.body.style.setProperty('-webkit-user-select', 'auto', 'important');
+            }
+          }
+        }
+        window.addEventListener('hashchange', syncAdminStatus);
+        window.addEventListener('roumaissa-storage-updated', syncAdminStatus);
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

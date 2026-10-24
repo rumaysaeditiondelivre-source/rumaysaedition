@@ -1,0 +1,8 @@
+{
+  "name": "Remix دار النشر رميسة إيديسيو - Roumaissa Édition",
+  "description": "منصة دار النشر والترجمة والتوزيع رميسة إيديسيو: متجر كتب فاخر، بيع ورقي وإلكتروني ePub، لوحة تحكم شاملة، بوابات شارجلي باي، وتوصيل لكافة الولايات.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
